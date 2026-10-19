@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Medical Study Companion | Blok Endokrin - Pengelolaan & Pencegahan DM Tipe 2 (PERKENI)</title>
+    <!-- Google Fonts & Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .smooth-scroll { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 smooth-scroll transition-colors duration-300">
+
+    <!-- Sticky Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <span class="bg-medical-600 text-white p-2 rounded-xl font-bold text-lg shadow-md">🩺</span>
+                <div>
+                    <h1 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white">MED-COMPANION <span class="text-medical-600">ENDOCRINE</span></h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Blok Endokrin & Metabolik - Pengelolaan & Pencegahan DM Tipe 2 (PERKENI)</p>
+                </div>
+            </div>
+
+            <!-- Search Bar & Progress -->
+            <div class="flex items-center space-x-4 flex-1 max-w-md mx-auto">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Cari materi, patofisiologi, obat, diagnosis, tatalaksana..." class="w-full pl-10 pr-4 py-1.5 text-sm bg-slate-100 dark:bg-slate-700/50 border border-transparent dark:border-slate-600 rounded-lg focus:outline-none focus:border-medical-500 dark:text-white placeholder-slate-400">
+                </div>
+            </div>
+
+            <!-- Controls (Theme & Progress Indicator) -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden md:block text-xs font-medium text-slate-600 dark:text-slate-300">
+                    Progress: <span id="progressText" class="font-bold text-medical-600">0%</span>
+                </div>
+                <button onclick="toggleDarkMode()" id="themeToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                    Mode
+                </button>
+            </div>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-1">
+            <div id="progressBar" class="bg-medical-600 h-1 w-0 transition-all duration-300"></div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="hidden lg:block lg:col-span-1 space-y-6">
+            <div class="sticky top-24 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Daftar Isi Materi</h3>
+                <nav class="space-y-1 text-sm">
+                    <a href="#overview" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">1. Definisi & Klasifikasi</a>
+                    <a href="#pathophysiology" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">2. Patofisiologi & Patomekanisme</a>
+                    <a href="#diagnosis" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">3. Diagnosis & Kriteria Kendali</a>
+                    <a href="#management" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">4. Tatalaksana & Farmakoterapi</a>
+                    <a href="#complications" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">5. Komplikasi, Risiko KV & Rujukan</a>
+                    <a href="#quiz-section" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">6. Latihan 10 Soal Ujian</a>
+                    <a href="#quick-review" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">7. Quick Review (5 Menit)</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="lg:col-span-3 space-y-8 searchable-content">
+
+            <!-- 1. COVER / TITLE & KLASIFIKASI -->
+            <section id="overview" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="bg-medical-100 text-medical-800 dark:bg-medical-900/50 dark:text-medical-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Topik Utama Endokrin & Metabolik</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mt-2">Pengelolaan dan Pencegahan Diabetes Melitus Tipe 2 di Indonesia (PERKENI)</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Dosen Pengampu: dr. Lin Novita Nurhidayati Mahmuda, M.Sc, Sp.PD | Universitas Muhammadiyah Surakarta</p>
+                    </div>
+                    <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl text-right">
+                        <span class="text-xs text-slate-500 dark:text-slate-400 block">Status Belajar</span>
+                        <span class="text-sm font-bold text-medical-600">High-Yield Exam Topic</span>
+                    </div>
+                </div>
+
+                <!-- Learning Objectives Checklist -->
+                <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-100 dark:border-slate-700">
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm mb-3">Target Pembelajaran (Checklist Belajar):</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Memahami definisi klinis dan klasifikasi etiologis DM</span></label>
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Menguasai kriteria diagnostik serta target sasaran kendali metabolik</span></label>
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Menganalisis 5 pilar penatalaksanaan serta algoritma farmakoterapi OAD dan insulin</span></label>
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Mengenali penyulit akut/kronis serta kriteria rujukan BPJS/PRB</span></label>
+                    </div>
+                </div>
+
+                <!-- Core Theory: Definisi & Klasifikasi -->
+                <div class="space-y-4">
+                    <div class="border-l-4 border-medical-500 bg-medical-50/50 dark:bg-slate-700/20 p-5 rounded-r-xl space-y-2">
+                        <h4 class="font-bold text-medical-800 dark:text-medical-400">1. Definisi Diabetes Melitus Tipe 2</h4>
+                        <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                            Diabetes melitus (DM) merupakan suatu kelompok penyakit metabolik dengan karakteristik hiperglikemia yang terjadi karena kelainan sekresi insulin, kerja insulin, atau keduanya.
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl p-5 space-y-3 bg-white dark:bg-slate-800">
+                        <h4 class="font-bold text-slate-800 dark:text-white text-base">Klasifikasi Etiologis Diabetes Melitus</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                                        <th class="p-2">Tipe DM</th>
+                                        <th class="p-2">Karakteristik & Deskripsi Utama</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-700 text-slate-600 dark:text-slate-300">
+                                    <tr>
+                                        <td class="p-2 font-medium">Tipe 1</td>
+                                        <td class="p-2">Destruksi sel beta pankreas, umumnya berhubungan dengan defisiensi insulin absolut (autoimun atau idiopatik).</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">Tipe 2</td>
+                                        <td class="p-2">Bervariasi, mulai dari yang dominan resistensi insulin disertai defisiensi insulin relatif sampai yang dominan defek sekresi insulin disertai resistensi insulin.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">Gestasional</td>
+                                        <td class="p-2">Diabetes yang didiagnosis pada trimester kedua atau ketiga kehamilan di mana sebelum kehamilan tidak didapatkan diabetes.</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">Tipe Spesifik Lain</td>
+                                        <td class="p-2">Sindroma diabetes monogenik (MODY, neonatal), penyakit eksokrin pankreas, atau diinduksi obat/zat kimia (glukokortikoid).</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. PATOFISIOLOGI & PATOMEKANISME -->
+            <section id="pathophysiology" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="text-medical-600 font-bold text-xs uppercase tracking-wider">Pathomechanism</span>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Patofisiologi & Patomekanisme (Omnious Octet / 11 Jalur)</h3>
+                </div>
+
+                <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400 text-base">🧠 Kerusakan Sentral & Multiorgan</h4>
+                        <p class="text-xs leading-relaxed">
+                            Resistensi insulin pada sel otot dan hepar serta kegagalan sel beta pankreas telah dikenal sebagai patofisiologi kerusakan sentral dari DM tipe 2. Berdasarkan konsep terkini PERKENI, terdapat 11 jalur disfungsi organ yang berkontribusi terhadap timbulnya hiperglikemia:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div class="bg-white dark:bg-slate-800 p-3 rounded-lg border border-slate-200 dark:border-slate-700 space-y-1">
+                                <b>1. Sel Beta Pankreas:</b> Penurunan sekresi insulin.<br>
+                                <b>2. Sel Alpha Pankreas:</b> Peningkatan sekresi glukagon.<br>
+                                <b>3. Sel Lemak (Adiposa):</b> Peningkatan lipolisis.<br>
+                                <b>4. Otot Rangka:</b> Penurunan utilisasi glukosa.<br>
+                                <b>5. Hepar:</b> Peningkatan produksi glukosa (glukoneogenesis).<br>
+                                <b>6. Otak:</b> Disfungsi neurotransmitter.
+                            </div>
+                            <div class="bg-white dark:bg-slate-800 p-3 rounded-lg border border-slate-200 dark:border-slate-700 space-y-1">
+                                <b>7. Kolon / Mikrobiota:</b> Abnormal microbiota.<br>
+                                <b>8. Usus Halus:</b> Peningkatan absorpsi glukosa.<br>
+                                <b>9. Ginjal:</b> Peningkatan reabsorpsi glukosa (SGLT-2).<br>
+                                <b>10. Lambung:</b> Percepatan pengosongan lambung.<br>
+                                <b>11. Sistem Imun:</b> Disregulasi dan inflamasi kronis.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. DIAGNOSIS & KRITERIA KENDALI -->
+            <section id="diagnosis" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="text-medical-600 font-bold text-xs uppercase tracking-wider">Diagnosis & Clinical Criteria</span>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Manifestasi Klinik, Kriteria Diagnostik, & Sasaran Kendali</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-600 dark:text-slate-300">
+                    <!-- Keluar & Diagnosis -->
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400 text-base">📋 Keluhan & Kriteria Diagnostik</h4>
+                        <p class="text-xs"><b>Keluhan Klasik (3P):</b> Poliuria, polidipsia, polifagia, dan penurunan berat badan yang tidak jelas sebabnya. Keluhan lain: lemah badan, kesemutan, gatal, mata kabur, disfungsi ereksi, pruritus vulva.</p>
+                        <div class="p-3 bg-white dark:bg-slate-800 rounded-lg text-xs border border-slate-200 dark:border-slate-700 space-y-1.5">
+                            <b>Kriteria Diagnostik (Pilih salah satu):</b><br>
+                            - GDP &ge; 126 mg/dL (puasa min. 8 jam).<br>
+                            - GD 2 jam PP &ge; 200 mg/dL (TTGO 75g).<br>
+                            - GD Sewaktu &ge; 200 mg/dL + gejala klasik.<br>
+                            - HbA1c &ge; 6.5% (metode NGSP/DCCT).
+                        </div>
+                    </div>
+
+                    <!-- Sasaran Kendali -->
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400 text-base">🎯 Sasaran Pengendalian (Tabel 11 PERKENI)</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                                        <th class="p-1.5">Parameter</th>
+                                        <th class="p-1.5">Target Sasaran</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                    <tr>
+                                        <td class="p-1.5 font-medium">IMT (kg/m&sup2;)</td>
+                                        <td class="p-1.5">18.5 – 22.9</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1.5 font-medium">Tekanan Darah</td>
+                                        <td class="p-1.5">&lt; 140/90 mmHg</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1.5 font-medium">HbA1c (%)</td>
+                                        <td class="p-1.5">&lt; 7 atau individual</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1.5 font-medium">Glukosa Darah Preprandial</td>
+                                        <td class="p-1.5">80 – 130 mg/dL</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1.5 font-medium">Glukosa Darah 2 Jam PP</td>
+                                        <td class="p-1.5">&lt; 180 mg/dL</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-1.5 font-medium">Kolesterol LDL</td>
+                                        <td class="p-1.5">&lt; 100 (&lt; 70 jika risiko KV sangat tinggi)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. TATALAKSANA & FARMAKOTERAPI -->
+            <section id="management" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Management & Pharmacology</span>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-2">5 Pilar Penatalaksanaan & Farmakoterapi PERKENI</h3>
+                </div>
+
+                <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                    <!-- 5 Pilar -->
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                        <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <h5 class="font-bold text-medical-600 dark:text-medical-400 text-xs">1. Edukasi</h5>
+                            <p class="text-[11px]">Promosi hidup sehat dan pencegahan komplikasi secara holistik.</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <h5 class="font-bold text-medical-600 dark:text-medical-400 text-xs">2. Terapi Nutrisi Medis</h5>
+                            <p class="text-[11px]">Karbohidrat 45-65%, Lemak 20-25%, Protein 10-15%, Natrium &lt; 1500 mg.</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <h5 class="font-bold text-medical-600 dark:text-medical-400 text-xs">3. Latihan Fisik</h5>
+                            <p class="text-[11px]">3-5 hari/minggu, total 150 menit/minggu, jeda antar latihan tidak &gt; 2 hari.</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <h5 class="font-bold text-medical-600 dark:text-medical-400 text-xs">4. Farmakoterapi</h5>
+                            <p class="text-[11px]">OAD atau suntik (insulin/GLP-1 RA) sesuai algoritma kendali glikemik.</p>
+                        </div>
+                        <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1">
+                            <h5 class="font-bold text-medical-600 dark:text-medical-400 text-xs">5. Pemantauan Mandiri</h5>
+                            <p class="text-[11px]">PGDM, pemeriksaan glukosa darah berkala, dan evaluasi HbA1c.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tabel OAD -->
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400 text-sm">💊 Ringkasan Golongan Obat Antidiabetik Oral</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left border-collapse bg-white dark:bg-slate-800 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                                        <th class="p-2">Golongan / Obat</th>
+                                        <th class="p-2">Mekanisme Kerja Utama</th>
+                                        <th class="p-2">Efek Samping Utama</th>
+                                        <th class="p-2">Penurunan HbA1c</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-700 text-slate-600 dark:text-slate-300">
+                                    <tr>
+                                        <td class="p-2 font-medium">Metformin (Lini 1)</td>
+                                        <td class="p-2">Menurunkan produksi glukosa hati & tingkatkan sensitivitas insulin.</td>
+                                        <td class="p-2">Dispepsia, diare, asidosis laktat</td>
+                                        <td class="p-2">1.0 – 1.3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">Sulfonilurea</td>
+                                        <td class="p-2">Meningkatkan sekresi insulin oleh sel beta pankreas.</td>
+                                        <td class="p-2">BB naik, hipoglikemia</td>
+                                        <td class="p-2">0.4 – 1.2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">Penghambat Alfa-Glukosidase</td>
+                                        <td class="p-2">Menghambat absorpsi glukosa di saluran pencernaan.</td>
+                                        <td class="p-2">Flatulen, tinja lembek</td>
+                                        <td class="p-2">0.5 – 0.8%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">Tiazolidinedion (TZD)</td>
+                                        <td class="p-2">Agonis PPAR-gamma, menurunkan resistensi insulin perifer.</td>
+                                        <td class="p-2">Edema (retensi cairan / gagal jantung)</td>
+                                        <td class="p-2">0.5 – 1.4%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">DPP-4 Inhibitor</td>
+                                        <td class="p-2">Mencegah inaktivasi GLP-1, tingkatkan insulin & tekan glukagon.</td>
+                                        <td class="p-2">Mual / sebah muntah</td>
+                                        <td class="p-2">0.5 – 0.9%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 font-medium">SGLT-2 Inhibitor</td>
+                                        <td class="p-2">Menghambat reabsorpsi glukosa di tubulus proksimal ginjal.</td>
+                                        <td class="p-2">Infeksi saluran kemih & genital</td>
+                                        <td class="p-2">0.5 – 0.9%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. KOMPLIKASI, RISIKO KV & RUJUKAN -->
+            <section id="complications" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="text-medical-600 font-bold text-xs uppercase tracking-wider">Complications & Referral System</span>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-2">Penyulit Akut/Kronis, Risiko KV, & Kriteria Rujukan (PRB)</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-600 dark:text-slate-300">
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400">🚨 Penyulit Akut & Menahun</h4>
+                        <ul class="list-disc pl-4 text-xs space-y-1.5">
+                            <li><b>Akut:</b> Krisis hiperglikemia (KAD & SHH/HHS) serta Hipoglikemia (glukosa darah &lt; 70 mg/dL dengan Whipple's triad).</li>
+                            <li><b>Makroangiopati:</b> Stroke, PJK, ulkus iskemik, klaudikasio intermiten.</li>
+                            <li><b>Mikroangiopati:</b> Retinopati diabetik, nefropati diabetik, neuropati, kardiomiopati.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400">📋 Indikasi Rujukan ke PPK II (Spesialis Penyakit Dalam / PRB)</h4>
+                        <p class="text-xs">Pasien di FKTP/PPK 1 perlu dirujuk jika dalam 3 bulan pengobatan target tidak tercapai (GDP &gt; 130 mg/dL, GD2PP &gt; 180 mg/dL, HbA1c &gt; 7%), mengalami krisis hiperglikemia, komplikasi kronis berat, infeksi kaki berat (ulkus/selulitis/abses), atau hipoglikemia berulang yang tidak teratasi.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. INTERACTIVE QUIZ (10 SOAL) -->
+            <section id="quiz-section" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-medical-600 font-bold text-xs uppercase tracking-wider">Exam Simulation</span>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Latihan 10 Soal Ujian Komprehensif PERKENI</h3>
+                    </div>
+                    <span id="quizScore" class="bg-medical-100 text-medical-800 dark:bg-medical-900 dark:text-medical-200 px-3 py-1 rounded-lg text-xs font-bold">Skor Total: 0 / 10</span>
+                </div>
+
+                <!-- SOAL 1 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q1">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>1.</b> Berdasarkan kriteria diagnostik PERKENI, berapakah nilai batasan Glukosa Darah Puasa (GDP) minimal untuk menegakkan diagnosis Diabetes Melitus?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="A" class="mr-2"> A. &ge; 100 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="B" class="mr-2"> B. &ge; 110 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="C" class="mr-2"> C. &ge; 126 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="D" class="mr-2"> D. &ge; 200 mg/dL</label>
+                    </div>
+                    <button onclick="checkSingle(1, 'C')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-1" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 2 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q2">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>2.</b> Obat antidiabetik oral lini pertama yang dianjurkan oleh PERKENI bagi sebagian besar pasien DM Tipe 2 tanpa kontraindikasi adalah:
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="A" class="mr-2"> A. Glibenklamid</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="B" class="mr-2"> B. Metformin</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="C" class="mr-2"> C. Pioglitazone</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="D" class="mr-2"> D. Acarbose</label>
+                    </div>
+                    <button onclick="checkSingle(2, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-2" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 3 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q3">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>3.</b> Berapakah target kadar kolesterol LDL yang dianjurkan untuk pasien diabetes yang disertai dengan penyakit kardiovaskular (risiko ekstrim) berdasarkan pedoman PERKENI?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="A" class="mr-2"> A. &lt; 130 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="B" class="mr-2"> B. &lt; 100 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="C" class="mr-2"> C. &lt; 70 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="D" class="mr-2"> D. &lt; 55 mg/dL</label>
+                    </div>
+                    <button onclick="checkSingle(3, 'D')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-3" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 4 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q4">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>4.</b> Berdasarkan 5 pilar penatalaksanaan DM PERKENI, berapakah durasi minimal dan frekuensi latihan fisik teratur yang dianjurkan per minggu?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="A" class="mr-2"> A. 1 hari per minggu, total 60 menit</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="B" class="mr-2"> B. 3–5 hari per minggu, total 150 menit</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="C" class="mr-2"> C. Setiap hari selama 10 menit</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="D" class="mr-2"> D. 2 hari per minggu, total 300 menit</label>
+                    </div>
+                    <button onclick="checkSingle(4, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-4" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 5 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q5">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>5.</b> Pada kadar Trigliserida berapakah seorang pasien diabetes perlu segera diberikan terapi Fibrat untuk mencegah komplikasi pankreatitis akut?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="A" class="mr-2"> A. &ge; 150 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="B" class="mr-2"> B. &ge; 250 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="C" class="mr-2"> C. &ge; 400 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="D" class="mr-2"> D. &ge; 500 mg/dL</label>
+                    </div>
+                    <button onclick="checkSingle(5, 'D')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-5" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 6 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q6">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>6.</b> Apa efek samping utama yang harus diwaspadai dari penggunaan obat golongan Sulfonilurea?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="A" class="mr-2"> A. Asidosis laktat</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="B" class="mr-2"> B. Hipoglikemia dan peningkatan berat badan</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="C" class="mr-2"> C. Infeksi saluran kemih</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="D" class="mr-2"> D. Penurunan berat badan drastis</label>
+                    </div>
+                    <button onclick="checkSingle(6, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-6" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 7 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q7">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>7.</b> Berdasarkan kriteria rujukan PERKENI di FKTP (PPK 1), kapan seorang pasien DM Tipe 2 harus dirujuk ke PPK II (Spesialis Penyakit Dalam)?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="A" class="mr-2"> A. Segera saat pertama kali didiagnosis</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="B" class="mr-2"> B. Apabila dalam terapi OAD tunggal atau kombinasi selama 3 bulan target glikemik tidak tercapai, atau muncul komplikasi berat</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="C" class="mr-2"> C. Hanya jika pasien meminta pindah rumah sakit</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="D" class="mr-2"> D. Setelah 5 tahun pengobatan rutin</label>
+                    </div>
+                    <button onclick="checkSingle(7, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-7" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 8 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q8">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>8.</b> Manakah definisi klinis yang tepat untuk mendiagnosis suatu kondisi Hipoglikemia pada pasien diabetes?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="A" class="mr-2"> A. Kadar glukosa darah &lt; 100 mg/dL</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="B" class="mr-2"> B. Penurunan kadar glukosa darah &lt; 70 mg/dL dengan atau tanpa gejala autonom (Whipple's triad)</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="C" class="mr-2"> C. Peningkatan kesadaran mendadak disertai takikardi</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="D" class="mr-2"> D. Glukosa darah sewaktu 140-199 mg/dL</label>
+                    </div>
+                    <button onclick="checkSingle(8, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-8" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 9 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q9">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>9.</b> Berdasarkan proporsi Terapi Nutrisi Medis PERKENI, berapakah persentase kisaran anjuran asupan karbohidrat dari total energi harian?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="A" class="mr-2"> A. 20 – 30%</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="B" class="mr-2"> B. 45 – 65%</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="C" class="mr-2"> C. 70 – 80%</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="D" class="mr-2"> D. 10 – 15%</label>
+                    </div>
+                    <button onclick="checkSingle(9, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-9" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 10 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q10">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>10.</b> Manakah obat golongan penghambat SGLT-2 yang bekerja di tubulus proksimal ginjal dan memiliki keunggulan tambahan dalam menurunkan berat badan serta tekanan darah?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="A" class="mr-2"> A. Metformin</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="B" class="mr-2"> B. Glimepiride</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="C" class="mr-2"> C. Dapagliflozin / Empagliflozin (Penghambat SGLT-2)</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="D" class="mr-2"> D. Acarbose</label>
+                    </div>
+                    <button onclick="checkSingle(10, 'C')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-10" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+            </section>
+
+            <!-- 7. QUICK REVIEW -->
+            <section id="quick-review" class="bg-gradient-to-br from-medical-600 to-medical-800 text-white p-6 md:p-8 rounded-2xl shadow-lg space-y-4">
+                <h3 class="text-xl font-bold flex items-center gap-2">If You Only Have 5 Minutes (Quick Review)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Kriteria Diagnostik PERKENI</span>
+                        <p>GDP &ge; 126 mg/dL, GD 2 Jam TTGO &ge; 200 mg/dL, GD Sewaktu &ge; 200 mg/dL + gejala 3P, atau HbA1c &ge; 6.5%.</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Lini Pertama Tipe 2</span>
+                        <p>Metformin + Modifikasi gaya hidup (5 pilar penatalaksanaan).</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Target Sasaran Kendali</span>
+                        <p>HbA1c &lt; 7%, GDP 80-130 mg/dL, TD &lt; 140/90 mmHg, IMT 18.5-22.9.</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Indikasi Rujukan BPJS/PRB</span>
+                        <p>Tidak tercapai target dalam 3 bulan, krisis hiperglikemia, komplikasi berat, atau infeksi kaki berat.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 mt-12">
+        Interactive Medical Study Companion • Blok Endokrin & Metabolik • UMS • Offline Ready
+    </footer>
+
+    <!-- JavaScript Interactivity -->
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeToggle.innerText = 'Mode Terang';
+            } else {
+                html.classList.add('dark');
+                themeToggle.innerText = 'Mode Gelap';
+            }
+        }
+
+        let totalScore = 0;
+        const answeredState = {};
+
+        function checkSingle(qNum, correctOpt) {
+            const radios = document.getElementsByName('q' + qNum);
+            let userVal = '';
+            for (const r of radios) {
+                if (r.checked) userVal = r.value;
+            }
+
+            const feedback = document.getElementById('feedback-' + qNum);
+            feedback.classList.remove('hidden');
+
+            if (!userVal) {
+                feedback.className = "mt-3 p-4 rounded-lg text-xs bg-amber-50 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200";
+                feedback.innerHTML = "Silakan pilih salah satu opsi jawaban terlebih dahulu.";
+                return;
+            }
+
+            if (!answeredState[qNum]) {
+                answeredState[qNum] = true;
+                if (userVal === correctOpt) {
+                    totalScore++;
+                    feedback.className = "mt-3 p-4 rounded-lg text-xs bg-emerald-50 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 border border-emerald-200";
+                    feedback.innerHTML = "<b>BENAR!</b><br>Jawaban Anda sudah tepat dan sesuai dengan pedoman klinis PERKENI.";
+                } else {
+                    feedback.className = "mt-3 p-4 rounded-lg text-xs bg-rose-50 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200 border border-rose-200";
+                    feedback.innerHTML = "<b>KURANG TEPAT.</b> Jawaban yang benar adalah opsi <b>" + correctOpt + "</b>.";
+                }
+                document.getElementById('quizScore').innerText = "Skor Total: " + totalScore + " / 10";
+            }
+        }
+
+        window.addEventListener('scroll', function() {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+            document.getElementById('progressText').innerText = Math.round(scrolled) + '%';
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.searchable-content > section');
+            sections.forEach(function(sec) {
+                const text = sec.innerText.toLowerCase();
+                if (text.includes(term) || term === '') {
+                    sec.style.display = '';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
